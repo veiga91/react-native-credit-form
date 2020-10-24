@@ -6,85 +6,37 @@ import Animated, {
   Value,
   cond,
   set,
-  eq,
-  and,
   not,
   startClock,
   clockRunning,
   timing,
   interpolate,
-  add
+  Extrapolate
 } from 'react-native-reanimated';
 
-export interface IFlipOverTimeParams {
-  onAnimationEnd?: () => void,
-  clock: Animated.Clock,
-  duration?: number,
-  animatedValue: Animated.Value<number>
+interface ExtrapolateObj {
+  extrapolate?: typeof Extrapolate;
+  extrapolateLeft?: typeof Extrapolate;
+  extrapolateRight?: typeof Extrapolate;
 }
 
-export const flipOverTime = ({
-  onAnimationEnd = () => {},
-  clock,
-  duration = 500,
-  animatedValue,
-}: IFlipOverTimeParams) => {
-  const state = {
-    finished: new Value(0),
-    position: new Value(0),
-    time: new Value(0),
-    frameTime: new Value(0),
-  };
+export interface IInterpolateOverTimeParams {
+  onAnimationEnd?: () => void;
+  clock: Animated.Clock;
+  duration?: number;
+  to: Animated.Value<number> | number;
+  from: Animated.Value<number> | number;
+  extrapolateObj?: ExtrapolateObj | {};
+}
 
-  const config = {
-    duration,
-    toValue: new Value(0),
-    easing: Easing.inOut(Easing.ease),
-  };
-
-  return block([
-    cond(
-      and(
-        eq(animatedValue, 1),
-        and(eq(config.toValue, 0), not(clockRunning(clock))),
-      ),
-      [
-        set(state.finished, 0),
-        set(state.time, 0),
-        set(state.frameTime, 0),
-        set(config.toValue, 1),
-        startClock(clock),
-      ],
-    ),
-    cond(
-      and(
-        eq(animatedValue, 0),
-        and(eq(config.toValue, 1), not(clockRunning(clock))),
-      ),
-      [
-        set(state.finished, 0),
-        set(state.time, 0),
-        set(state.frameTime, 0),
-        set(config.toValue, 0),
-        startClock(clock),
-      ],
-    ),
-    timing(clock, state, config),
-    cond(state.finished, [
-      call([config.toValue], onAnimationEnd),
-      stopClock(clock),
-    ]),
-    state.position,
-  ]);
-};
-
-export const translateOverTime = ({
+export const interpolateOverTime = ({
   onAnimationEnd = () => {},
   clock,
   duration = 500,
   from,
-  to
-}: IFlipOverTimeParams) => {
+  to,
+  extrapolateObj = {},
+}: IInterpolateOverTimeParams) => {
   const state = {
     finished: new Value(0),
     position: new Value(0),
@@ -97,6 +49,8 @@ export const translateOverTime = ({
     toValue: new Value(0),
     easing: Easing.inOut(Easing.ease),
   };
+
+  const extrapolateConfig = extrapolateObj || {};
 
   return block([
     cond(not(clockRunning(clock)), [
@@ -114,6 +68,7 @@ export const translateOverTime = ({
     interpolate(state.position, {
       inputRange: [0, 1],
       outputRange: [from, to],
+      ...extrapolateConfig
     })
   ])
-}
+};

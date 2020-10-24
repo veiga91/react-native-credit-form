@@ -14,7 +14,8 @@ import {
   View,
   Text,
   StatusBar,
-  Button
+  Button,
+  TextInput
 } from 'react-native';
 
 import {
@@ -25,29 +26,18 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import Card from './src/Card';
-import FrontFields from './src/FrontInfo';
+import CardForm from './src';
+import CardContext, { form } from './src/context/CardContext';
 
 import { useValue, not } from 'react-native-reanimated';
 
 const App: () => React$Node = () => {
-  const value = useValue(0);
-
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{ paddingTop: 20 }}>
         <View style={{ alignItems: 'center'}}>
-          <Card
-            backImage={{ uri: 'https://i.picsum.photos/id/1000/5626/3635.jpg?hmac=qWh065Fr_M8Oa3sNsdDL8ngWXv2Jb-EE49ZIn6c0P-g'}}
-            frontImage={{uri: 'https://i.picsum.photos/id/10/2500/1667.jpg?hmac=J04WWC_ebchx3WwzbM-Z4_KC_LeLBWr5LZMaAkWkF68'}}
-            animatedValue={value}
-          />
-         
-          <Button title="Press me" onPress={() => { value.setValue(not(value)) }}>
-          
-
-        </Button>
+          <CardForm />
         </View>
       </SafeAreaView>
     </>

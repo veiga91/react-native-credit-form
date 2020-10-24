@@ -1,7 +1,7 @@
 import { Dimensions, PixelRatio } from 'react-native';
 export const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-type PercentageSizeFunc = (percentage : number | string, based?: 'width' | 'height') => number | undefined;
+type PercentageSizeFunc = (percentage : number | string, based?: 'width' | 'height') => number;
 
 const getPercentageValue: (percentage : number) => number = (percentage) => {
   if (percentage > 1) return (percentage / 100);
@@ -23,7 +23,7 @@ export const getPercentageSize: PercentageSizeFunc = (percentage, based = 'width
   if (typeof percentage === 'number') {
     parsedPercentage = getPercentageValue(percentage);
   }
-  const size = parsedPercentage &&PixelRatio.roundToNearestPixel(basedOnSizeOf * parsedPercentage);
+  const size = PixelRatio.roundToNearestPixel(basedOnSizeOf * (parsedPercentage || 1));
 
-  return size && Math.round(size);
+  return Math.round(size);
 };
