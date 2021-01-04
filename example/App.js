@@ -25,7 +25,7 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+import 'react-native-gesture-handler';
 import CardForm from './src';
 import CardContext, { form } from './src/context/CardContext';
 
