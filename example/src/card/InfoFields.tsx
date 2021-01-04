@@ -1,4 +1,4 @@
-import React, {useState, useReducer} from 'react';
+import React, {useState, useContext} from 'react';
 import {View, Text} from 'react-native';
 import {base, typograph} from '../style/styles';
 import Focus from './Focus';
@@ -6,7 +6,7 @@ import CardText from './CardText';
 import TouchableWrapper from './TouchableWrapper';
 import {getCardNameLayout, getLayout} from './onChangeLayout';
 import styles from './frontInfo.styles';
-import CardContext from '../context/CardContext';
+
 interface IValueObj {
   value: string;
   validator: string;
@@ -37,36 +37,14 @@ const INITIAL_LAYOUT = {
 };
 
 const FrontFields: React.FC<IFrontInfoProps> = (props) => {
-  const {fontFamily, currentIndex, changeIndex, values} = props;
-  const [cardNumberLayout, setCardNumberLayout] = useState(INITIAL_LAYOUT);
-  const [nameLayout, setNameLayout] = useState(INITIAL_LAYOUT);
-  const [expirationDateLayout, setExpirationDateLayout] = useState(
-    INITIAL_LAYOUT,
-  );
-  //const [index, setIndex] = useState(currentIndex);
-  // const { setIndex, currentFieldIndex } = useContext(CardContext)
-  const updateIndex = (index: number) => {
-    //changeIndex(index);
-    //setIndex(index);
-  };
-
-  const layouts = [
-    nameLayout,
-    expirationDateLayout,
-    cardNumberLayout,
-    nameLayout
-  ];
-  const isNameField = 0 !== 0;
+  const {fontFamily, currentIndex, values, setExpirationDateLayout, setCardNumberLayout, setNameLayout} = props;
+  
+  const isNameField = currentIndex === 0;
   const nameFieldBorder = isNameField ? 2 : 0;
   const nameFieldPadding = isNameField ? 5 : 7;
   
   return (
-    <View style={[absolutePositioning, styles.container]}>
-  
-      
-      <Focus layouts={layouts} hide={isNameField} />
-
-      <View style={[styles.content, paddingLeft3Percent]}>
+    <View style={[styles.content, paddingLeft3Percent]}>
         <View style={flex2}></View>
 
         <TouchableWrapper changeIndex={updateIndex} index={2} disabled={false}>
@@ -119,7 +97,6 @@ const FrontFields: React.FC<IFrontInfoProps> = (props) => {
           <Text>ldskflskdfjlkfj</Text>
         </View>
       </View>
-    </View>
   );
 };
 

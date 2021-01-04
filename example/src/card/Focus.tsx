@@ -1,27 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { useValue, useCode, block, set, Clock } from 'react-native-reanimated';
 import { interpolateOverTime } from '../animations';
+import CardContext from '../context/CardContext';
 
 interface IFocusProps {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  
   borderColor?: string;
   hide: boolean;
+  layouts: Array<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }>
 };
 
 const DURATION = 1000;
 
+const clock = new Clock();
+const clock2 = new Clock();
+const clock3 = new Clock();
+const clock4 = new Clock();
+
 const Focus: React.FC<IFocusProps> = (props) => {
-  const { x, y, width, height } = props;
-  
-  if (x === 0 || y === 0 || width === 0 || height === 0) return null;
-  const clock = new Clock();
-  const clock2 = new Clock();
-  const clock3 = new Clock();
-  const clock4 = new Clock();
+  if (props.layouts.length === 1) return null;
+
+  const {currentFieldIndex} = useContext(CardContext);
+  const {x, y, width, height} = props.layouts[currentFieldIndex];
   
   const translateY = useValue(y);
   const translateX = useValue(x);
@@ -70,4 +76,4 @@ Focus.defaultProps = {
   borderColor: 'gold'
 };
 
-export default Focus;
+export default React.memo(Focus);

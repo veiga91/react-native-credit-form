@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {TouchableWithoutFeedback} from 'react-native';
+import CardContext from '../context/CardContext';
 
 export interface ITouchableWrapperProps {
   index: number;
@@ -9,10 +10,11 @@ export interface ITouchableWrapperProps {
 
 const TouchableWrapper: React.FC<ITouchableWrapperProps> = (props) => {
   const {index, disabled, changeIndex} = props;
-
+  const {setIndex} = useContext(CardContext);
+  console.log('RENDEHDJDH')
   const handleChangeIndex = () => {
     if (!disabled) {
-      changeIndex(index);
+      setIndex(index);
     }
   };
 
@@ -23,4 +25,4 @@ const TouchableWrapper: React.FC<ITouchableWrapperProps> = (props) => {
   );
 };
 
-export default TouchableWrapper;
+export default React.memo(TouchableWrapper);
