@@ -4,7 +4,7 @@ import { FieldsState, FieldsDispatch, FieldsReducer, ProviderProps } from '.';
 const FieldsStateContext = createContext<FieldsState | undefined>(undefined);
 const FieldsDispatchContext = createContext<FieldsDispatch | undefined>(undefined);
 
-const TYPES = {
+export const TYPES = {
   UPDATE_VALUE: "UPDATE_VALUE",
   CLEAR_FIELD: "CLEAR_FIELD",
   UPDATE_VALIDATION: "UPDATE_VALIDATION"
@@ -91,4 +91,4 @@ const useFields: () => [FieldsState, FieldsDispatch] = () => {
 };
 
 
-export {FieldsProvider, useFields};
+export {FieldsProvider, useFields, useFieldsState, useFieldsDispatch};

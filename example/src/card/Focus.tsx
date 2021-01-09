@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { useValue, useCode, block, set, Clock } from 'react-native-reanimated';
 import { interpolateOverTime } from '../animations';
-import CardContext from '../context/CardContext';
+import { useCardState } from '../context/CardContext';
 
 interface IFocusProps {
   
@@ -24,10 +24,11 @@ const clock3 = new Clock();
 const clock4 = new Clock();
 
 const Focus: React.FC<IFocusProps> = (props) => {
-  if (props.layouts.length === 1) return null;
+  const {index, cardSide} = useCardState();
 
-  const {currentFieldIndex} = useContext(CardContext);
-  const {x, y, width, height} = props.layouts[currentFieldIndex];
+  if (props.layouts.length === 1 && cardSide === "front") return null;
+
+  const {x, y, width, height} = props.layouts[index];
   
   const translateY = useValue(y);
   const translateX = useValue(x);

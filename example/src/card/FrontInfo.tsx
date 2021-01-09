@@ -6,7 +6,7 @@ import CardText from './CardText';
 import TouchableWrapper from './TouchableWrapper';
 import {getCardNameLayout, getLayout} from './onChangeLayout';
 import styles from './frontInfo.styles';
-import CardContext from '../context/CardContext';
+
 interface IValueObj {
   value: string;
   validator: string;
@@ -37,7 +37,8 @@ const INITIAL_LAYOUT = {
 };
 
 const FrontFields: React.FC<IFrontInfoProps> = (props) => {
-  const {fontFamily, currentIndex, changeIndex, values} = props;
+  const {fontFamily} = props;
+
   const [cardNumberLayout, setCardNumberLayout] = useState(INITIAL_LAYOUT);
   const [nameLayout, setNameLayout] = useState(INITIAL_LAYOUT);
   const [expirationDateLayout, setExpirationDateLayout] = useState(
@@ -123,4 +124,4 @@ const FrontFields: React.FC<IFrontInfoProps> = (props) => {
   );
 };
 
-export default FrontFields;
+export default React.memo(FrontFields);

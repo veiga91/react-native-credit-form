@@ -15,6 +15,7 @@ import Animated, {
 import {interpolateOverTime} from '../animations';
 import styles from './card.styles';
 import {base} from '../style/styles';
+import {CardProvider} from '../context/CardContext';
 
 const {absolutePositioning} = base;
 
@@ -74,6 +75,8 @@ const Card: React.FC<ICardProps> = (props) => {
   const maxHeight = cardHeight ? {maxHeight: cardHeight} : {};
 
   return (
+    <CardProvider>
+
     <View style={[styles.container, {...maxHeight, ...maxWidth}]}>
       <Animated.View
         style={[absolutePositioning, {transform: [{rotateY}, {perspective}]}]}>
@@ -93,6 +96,7 @@ const Card: React.FC<ICardProps> = (props) => {
         {props.children}
       </Animated.View>
     </View>
+    </CardProvider>
   );
 };
 

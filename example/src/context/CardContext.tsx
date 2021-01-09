@@ -1,5 +1,5 @@
 import React, { useReducer, createContext, useContext } from 'react';
-import { CardState, CardDispatch, ProviderProps } from '.';
+import { CardState, CardDispatch, ProviderProps, CardReducer } from '.';
 
 const CardStateContext = createContext<CardState | undefined>(undefined);
 const CardDispatchContext = createContext<CardDispatch | undefined>(undefined);
@@ -9,7 +9,7 @@ const INITIAL_STATE: CardState = {
   cardSide: 'front'
 };
 
-const TYPES = {
+export const TYPES = {
   UPDATE_INDEX: "UPDATE_INDEX",
   FLIP_CARD_FRONT: "FLIP_CARD_FRONT",
   FLIP_CARD_BACK: "FLIP_CARD_BACK"
@@ -20,15 +20,14 @@ const cardReducer: CardReducer = (state, action) => {
     case TYPES.UPDATE_INDEX:
       return {
         ...state,
-          index: action.payload
-        }
-      };
+        index: action.payload
+      }
     case TYPES.FLIP_CARD_FRONT:
       return {
         ...state,
         cardSide: 'front'
       };
-    case TYPES.FLIP_CARD_BACK:
+    case TYPES.FLIP_CARD_BACK: 
       return {
         ...state,
         cardSide: 'back'
@@ -40,7 +39,7 @@ const cardReducer: CardReducer = (state, action) => {
 };
 
 
-const FieldsProvider: React.FC<ProviderProps> = ({children}) => {
+const CardProvider: React.FC<ProviderProps> = ({children}) => {
   const [state, dispatch] = useReducer(cardReducer, INITIAL_STATE);
 
   return (
@@ -73,4 +72,4 @@ const useCard: () => [CardState, CardDispatch] = () => {
 };
 
 
-export {FieldsProvider, useCard};
+export {CardProvider, useCard, useCardState, useCardDispatch};

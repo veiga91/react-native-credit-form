@@ -1,7 +1,7 @@
 import {SetStateAction} from 'react';
 import {LayoutChangeEvent} from 'react-native';
 
-export interface ILayoutState {
+interface ILayoutState {
   width: number;
   height: number;
   y: number;
@@ -11,7 +11,7 @@ export interface ILayoutState {
 const WIDTH_OFFSET = 10;
 const HORIZONTAL_OFFSET = 5;
 
-export type LayoutFunction = (
+type LayoutFunction = (
   setState: (obj: SetStateAction<ILayoutState>) => void,
 ) => (synteticEvent: LayoutChangeEvent) => void;
 
