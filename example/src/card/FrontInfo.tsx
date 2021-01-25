@@ -1,33 +1,11 @@
-import React, {useState, useReducer} from 'react';
+import React, {useState} from 'react';
 import {View, Text} from 'react-native';
-import {base, typograph} from '../style/styles';
 import Focus from './Focus';
-import CardText from './CardText';
-import TouchableWrapper from './TouchableWrapper';
 import {getCardNameLayout, getLayout} from './onChangeLayout';
 import styles from './frontInfo.styles';
-
-interface IValueObj {
-  value: string;
-  validator: string;
-  mask: (value: string) => string;
-}
-
-interface IValues {
-  cardNumber: IValueObj;
-  expireDate: IValueObj;
-  cardName: IValueObj;
-}
-
-export interface IFrontInfoProps {
-  fontFamily?: string;
-  expirationLabel?: string;
-  currentIndex: number;
-  changeIndex: (i: number) => void;
-  values: IValues
-}
-
-const {absolutePositioning, flex2, paddingLeft3Percent} = base;
+import CardName from './CardName';
+import CardInfoField from './CardInfoField';
+import {useStyle} from '../context/StyleContext';
 
 const INITIAL_LAYOUT = {
   width: 0,
@@ -36,87 +14,65 @@ const INITIAL_LAYOUT = {
   y: 0,
 };
 
-const FrontFields: React.FC<IFrontInfoProps> = (props) => {
-  const {fontFamily} = props;
-
+const FrontFields: React.FC<{}> = () => {
+  const {base, typograph} = useStyle();
   const [cardNumberLayout, setCardNumberLayout] = useState(INITIAL_LAYOUT);
   const [nameLayout, setNameLayout] = useState(INITIAL_LAYOUT);
   const [expirationDateLayout, setExpirationDateLayout] = useState(
     INITIAL_LAYOUT,
   );
-  //const [index, setIndex] = useState(currentIndex);
-  // const { setIndex, currentFieldIndex } = useContext(CardContext)
-  const updateIndex = (index: number) => {
-    //changeIndex(index);
-    //setIndex(index);
-  };
-
-  const layouts = [
-    nameLayout,
-    expirationDateLayout,
-    cardNumberLayout,
-    nameLayout
-  ];
-  const isNameField = 0 !== 0;
-  const nameFieldBorder = isNameField ? 2 : 0;
-  const nameFieldPadding = isNameField ? 5 : 7;
+ 
+  const shouldRenderFocus = nameLayout.x + expirationDateLayout.x + cardNumberLayout.x > 0;
   
   return (
-    <View style={[absolutePositioning, styles.container]}>
+    <View style={[base.absolutePositioning, styles.container]}>
   
-      
-      <Focus layouts={layouts} hide={isNameField} />
+      {shouldRenderFocus && 
+      <Focus 
+        layouts={[
+          nameLayout,
+          expirationDateLayout,
+          cardNumberLayout,
+          nameLayout
+        ]} />
+      }
 
-      <View style={[styles.content, paddingLeft3Percent]}>
-        <View style={flex2}></View>
+      <View style={[styles.content, base.paddingLeft3Percent]}>
+        <View style={base.flex2}></View>
 
-        <TouchableWrapper changeIndex={updateIndex} index={2} disabled={false}>
-          <View
-            style={[absolutePositioning, styles.cardNumber]}
-            onLayout={getLayout(setCardNumberLayout)}>
-            <CardText id="cardNumber" config={values.cardNumber} fontFamily={fontFamily} />
-          </View>
-        </TouchableWrapper>
+        <CardInfoField
+          setLayout={getLayout(setCardNumberLayout)}
+          id="cardNumber"
+          index={2}
+          style={styles.cardNumber}
+        />
 
         <Text
           style={[
-            absolutePositioning,
+            base.absolutePositioning,
             typograph.smallTextLight,
-            {fontFamily},
             styles.nameLabel,
           ]}>
           {'NAME ON THE CARD'}
         </Text>
-        <TouchableWrapper changeIndex={updateIndex} index={3} disabled={false}>
-          <View
-            style={[
-              absolutePositioning,
-              styles.name,
-              {borderWidth: nameFieldBorder, paddingLeft: nameFieldPadding},
-            ]}
-            onLayout={getCardNameLayout(setNameLayout)}>
-            <CardText id="cardName" config={values.cardName} fontFamily={fontFamily} />
-          </View>
-        </TouchableWrapper>
+        <CardName getLayout={getCardNameLayout(setNameLayout)} />
 
         <Text
           style={[
-            absolutePositioning,
+            base.absolutePositioning,
             typograph.smallTextLight,
-            {fontFamily},
             styles.expirationLabel,
           ]}>
-          {'VALID THRU'}{' '}
+          {'VALID THRU'}
         </Text>
-        <TouchableWrapper changeIndex={updateIndex} index={1} disabled={false}>
-          <View
-            style={[absolutePositioning, styles.expirationDate]}
-            onLayout={getLayout(setExpirationDateLayout)}>
-            <CardText id="expireDate" config={values.expireDate} fontFamily={fontFamily} />
-          </View>
-        </TouchableWrapper>
+        <CardInfoField
+          setLayout={getLayout(setExpirationDateLayout)}
+          id="expirationDate"
+          index={1}
+          style={styles.expirationDate}
+        />
 
-        <View style={[absolutePositioning, styles.cardBrand]}>
+        <View style={[base.absolutePositioning, styles.cardBrand]}>
           <Text>ldskflskdfjlkfj</Text>
         </View>
       </View>

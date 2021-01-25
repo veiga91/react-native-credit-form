@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Image, ImageSourcePropType} from 'react-native';
-import Animated, {
+import {View} from 'react-native';
+import {
   Extrapolate,
   Clock,
   useCode,
@@ -14,37 +14,27 @@ import Animated, {
 } from 'react-native-reanimated';
 import {interpolateOverTime} from '../animations';
 import styles from './card.styles';
-import {base} from '../style/styles';
-import {CardProvider} from '../context/CardContext';
+import {useCardState} from '../context/CardContext';
+import CardAnimatedSide from './CardAnimatedSide';
+import FrontInfo from './FrontInfo';
+import {CardProps} from './';
 
-const {absolutePositioning} = base;
-
-export interface ICardProps {
-  index: number;
-  cardWidth?: number | string;
-  cardHeight?: number | string;
-  backImage: ImageSourcePropType;
-  frontImage: ImageSourcePropType;
-  editMode: boolean
-}
-
-const perspective = 1000;
 const FRONT_FACE_ANGLE = 0;
 const BACK_FACE_ANGLE = -Math.PI;
 const clock = new Clock();
 
-const Card: React.FC<ICardProps> = (props) => {
-  const {index, cardWidth, cardHeight, backImage, frontImage, editMode} = props;
-  
+const Card: React.FC<CardProps> = (props) => {
+  const {cardWidth, cardHeight, backImage, frontImage} = props;
+  const {cardSide} = useCardState();
   const rotateY = useValue(0);
   const extrapolateObj = {extrapolate: Extrapolate.CLAMP};
-  const backFlipIndex = editMode ? 4 : 3;
+  const backFlipIndex = cardSide === "front" ? 1 : 0;
   
   useCode(
     () =>
       block([
         cond(
-          eq(index, backFlipIndex),
+          eq(backFlipIndex, 0),
           set(
             rotateY,
             interpolateOverTime({
@@ -56,7 +46,7 @@ const Card: React.FC<ICardProps> = (props) => {
           ),
         ),
         cond(
-          and(eq(index, 0), neq(rotateY, FRONT_FACE_ANGLE)),
+          and(eq(backFlipIndex, 1), neq(rotateY, FRONT_FACE_ANGLE)),
           set(
             rotateY,
             interpolateOverTime({
@@ -68,35 +58,30 @@ const Card: React.FC<ICardProps> = (props) => {
           ),
         ),
       ]),
-    [index],
+    [cardSide],
   );
 
   const maxWidth = cardWidth ? {maxWidth: cardWidth} : {};
   const maxHeight = cardHeight ? {maxHeight: cardHeight} : {};
 
   return (
-    <CardProvider>
-
     <View style={[styles.container, {...maxHeight, ...maxWidth}]}>
-      <Animated.View
-        style={[absolutePositioning, {transform: [{rotateY}, {perspective}]}]}>
-        <Image style={[absolutePositioning, styles.image]} source={backImage} />
-      </Animated.View>
+      <CardAnimatedSide
+        image={backImage}
+        rotateY={rotateY}
+        side={"back"}
+      >
 
-      <Animated.View
-        style={[
-          absolutePositioning,
-          styles.front,
-          {transform: [{rotateY}, {perspective}]},
-        ]}>
-        <Image
-          style={[absolutePositioning, styles.image]}
-          source={frontImage}
-        />
-        {props.children}
-      </Animated.View>
+      </CardAnimatedSide>
+
+      <CardAnimatedSide
+        image={frontImage}
+        rotateY={rotateY}
+        side={"front"}
+      >
+        <FrontInfo />
+      </CardAnimatedSide>
     </View>
-    </CardProvider>
   );
 };
 

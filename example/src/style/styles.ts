@@ -26,7 +26,11 @@ export const typograph = StyleSheet.create({
     color: 'white',
     fontSize: (BASE_FONT * 1.15)
   },
-  expireDate: {
+  expirationDate: {
+    color: 'white',
+    fontSize: (BASE_FONT * 1.15)
+  },
+  cvv: {
     color: 'white',
     fontSize: (BASE_FONT * 1.15)
   },

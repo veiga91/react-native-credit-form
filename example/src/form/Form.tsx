@@ -1,32 +1,47 @@
-import React, {useState, useEffect} from 'react';
-import {TextInput, Button, View, Dimensions} from 'react-native';
-import Animated, {useValue, useCode, block, cond, Clock, set, eq, Extrapolate, and, neq, clockRunning, not} from 'react-native-reanimated';
-import {interpolateOverTime} from '../animations';
-import FieldContainer from './FieldContainer';
+import React, {useRef, useEffect} from 'react';
+import {Dimensions, FlatList, View} from 'react-native';
+import Input from './Input';
+import {useCardState} from '../context/CardContext';
 
-const width = Dimensions.get('window').width;
+const defaultFieldsStructure = [
+  {
+    name: 'cardName',
+    mask: (value) => value,
+    validator: (value) => value,
+    percentageWidth: 1,
+    index: 0
+  },
+  {
+    name: 'cardNumber',
+    mask: (value) => value,
+    validator: (value) => value,
+    percentageWidth: 1,
+    index: 2,
+    separation: '^([0-9]{4})([0-9]{6})?(?:([0-9]{6})([0-9]{5}))?$'
+  },
+  {
+    name: 'expirationDate',
+    mask: (value) => value,
+    validator: (value) => value,
+    percentageWidth: 0.45,
+    index: 1
+  },
+  {
+    name: 'cvv',
+    mask: (value) => value,
+    validator: (value) => value,
+    percentageWidth: 0.45,
+    index: 3
+  }
+];
 
 const Form = (props) => {
-  const {ButtonComponent, InputComponent} = props;
-
-
 
   return (
-    <View style={{ flexDirection: 'row', overflow: 'hidden',}}>
-      <FieldContainer currentIndex={props.index} index={0}>
-        <InputComponent
-          value={''}
-          style={{ width: 200, height: 70, borderColor: 'green', borderWidth: 2 }}
-        />
-        <ButtonComponent title={"kajsdhdf"} onPress={() => { setTimeout(() => { props.next();  }, 500) }} />
-      </FieldContainer>
-      <FieldContainer currentIndex={props.index} index={1}>
-        <InputComponent
-          value={''}
-          style={{ width: 200, height: 70, borderColor: 'green', borderWidth: 2 }}
-        />
-        <ButtonComponent title={"kajsdhdf"} onPress={() => { setTimeout(() => { props.next();  }, 500) }} />
-      </FieldContainer>
+    <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap" }}>
+     {defaultFieldsStructure.map(
+        (item) => <Input key={item.name} {...item} />
+      )}
     </View>
   );
 };

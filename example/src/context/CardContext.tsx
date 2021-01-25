@@ -1,5 +1,5 @@
-import React, { useReducer, createContext, useContext } from 'react';
-import { CardState, CardDispatch, ProviderProps, CardReducer } from '.';
+import React, {useReducer, createContext, useContext} from 'react';
+import {CardState, CardDispatch, ProviderProps, CardReducer} from './';
 
 const CardStateContext = createContext<CardState | undefined>(undefined);
 const CardDispatchContext = createContext<CardDispatch | undefined>(undefined);

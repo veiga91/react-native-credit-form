@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
   front: {
     backfaceVisibility: 'hidden',
   },
+  back: {
+    backfaceVisibility: 'visible',
+  }
 });
 
 export default styles;

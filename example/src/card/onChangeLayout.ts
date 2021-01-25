@@ -1,19 +1,7 @@
-import {SetStateAction} from 'react';
-import {LayoutChangeEvent} from 'react-native';
+import {LayoutFunction} from "card";
 
-interface ILayoutState {
-  width: number;
-  height: number;
-  y: number;
-  x: number;
-};
-
-const WIDTH_OFFSET = 10;
 const HORIZONTAL_OFFSET = 5;
-
-type LayoutFunction = (
-  setState: (obj: SetStateAction<ILayoutState>) => void,
-) => (synteticEvent: LayoutChangeEvent) => void;
+const WIDTH_OFFSET = 10;
 
 export const getCardNameLayout: LayoutFunction = (setState) => ({
   nativeEvent: {
